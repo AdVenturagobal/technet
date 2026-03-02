@@ -7,6 +7,8 @@ Static single-page website for Siemens PLC buyback.
 - `index.html`
 - `styles.css`
 - `script.js`
+- `api/meta-capi.js`
+- `TRACKING.md`
 
 ## Deploy With GitHub + Vercel
 
