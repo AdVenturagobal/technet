@@ -38,6 +38,13 @@ After that, every `git push` to `main` will trigger automatic redeploy on Vercel
 - Telegram: `https://t.me/bigfang789`
 - Email: `mailto:bellallyson394@gmail.com`
 
+## Language Routing
+
+- English page: `/` (`index.html`)
+- Vietnamese page: `/vi.html`
+- Auto default to Vietnamese for Vietnam access (timezone/IP heuristic with cache)
+- Non-Vietnam visitors stay on English
+
 ## Image Credits (Pexels)
 
 - https://www.pexels.com/photo/industrial-worker-operating-machinery-control-panel-35072831/

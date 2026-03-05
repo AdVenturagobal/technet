@@ -2,7 +2,7 @@
 
 This project uses:
 
-- Meta Pixel ID: `1458255249041584`
+- Meta Pixel ID: `1682942049240553`
 - Conversions API endpoint: `/api/meta-capi`
 
 ## Architecture

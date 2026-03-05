@@ -3,7 +3,7 @@ if (yearNode) {
   yearNode.textContent = new Date().getFullYear();
 }
 
-const META_PIXEL_ID = "1458255249041584";
+const META_PIXEL_ID = "1682942049240553";
 const CAPI_ENDPOINT = "/api/meta-capi";
 const sentSectionViews = new Set();
 

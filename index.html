@@ -12,13 +12,106 @@
   <meta property="og:url" content="https://example.com/">
   <meta name="theme-color" content="#0c1b2a">
   <script>
+    (function () {
+      var CACHE_KEY = "country_cache_v1";
+      var PREF_KEY = "preferred_lang";
+      var TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+      function safeGet(key) {
+        try {
+          return window.localStorage.getItem(key);
+        } catch (_) {
+          return null;
+        }
+      }
+
+      function safeSet(key, value) {
+        try {
+          window.localStorage.setItem(key, value);
+        } catch (_) {}
+      }
+
+      function redirectToVi() {
+        if (!window.location.pathname.endsWith("/vi.html")) {
+          window.location.replace("/vi.html");
+        }
+      }
+
+      var params = new URLSearchParams(window.location.search);
+      var forcedLang = params.get("lang");
+      if (forcedLang === "en") {
+        safeSet(PREF_KEY, "en");
+        return;
+      }
+      if (forcedLang === "vi") {
+        safeSet(PREF_KEY, "vi");
+        redirectToVi();
+        return;
+      }
+
+      var preferred = safeGet(PREF_KEY);
+      if (preferred === "en") return;
+      if (preferred === "vi") {
+        redirectToVi();
+        return;
+      }
+
+      var tz = "";
+      try {
+        tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+      } catch (_) {}
+      if (tz === "Asia/Ho_Chi_Minh") {
+        safeSet(PREF_KEY, "vi");
+        redirectToVi();
+        return;
+      }
+
+      var cachedRaw = safeGet(CACHE_KEY);
+      if (cachedRaw) {
+        try {
+          var cached = JSON.parse(cachedRaw);
+          if (cached && cached.code && cached.ts && Date.now() - cached.ts < TTL_MS) {
+            if (cached.code === "VN") {
+              safeSet(PREF_KEY, "vi");
+              redirectToVi();
+            }
+            return;
+          }
+        } catch (_) {}
+      }
+
+      var controller = new AbortController();
+      var timer = setTimeout(function () {
+        controller.abort();
+      }, 1800);
+
+      fetch("https://ipapi.co/json/", { signal: controller.signal })
+        .then(function (resp) {
+          if (!resp.ok) throw new Error("geo lookup failed");
+          return resp.json();
+        })
+        .then(function (json) {
+          clearTimeout(timer);
+          var code = (json && json.country_code) ? String(json.country_code).toUpperCase() : "";
+          safeSet(CACHE_KEY, JSON.stringify({ code: code, ts: Date.now() }));
+          if (code === "VN") {
+            safeSet(PREF_KEY, "vi");
+            redirectToVi();
+          }
+        })
+        .catch(function () {
+          clearTimeout(timer);
+        });
+    })();
+  </script>
+  <script>
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
     n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;
     t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(
       window, document, "script", "https://connect.facebook.net/en_US/fbevents.js"
     );
-    fbq("init", "1458255249041584");
+    fbq("init", "1682942049240553");
     fbq("track", "PageView");
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,7 +125,7 @@
       height="1"
       width="1"
       style="display:none"
-      src="https://www.facebook.com/tr?id=1458255249041584&amp;ev=PageView&amp;noscript=1"
+      src="https://www.facebook.com/tr?id=1682942049240553&amp;ev=PageView&amp;noscript=1"
       alt=""
     >
   </noscript>
@@ -42,10 +135,17 @@
   <header class="topbar">
     <div class="container topbar-inner">
       <p class="topbar-title">Global Siemens PLC Buyback</p>
-      <div class="contact-links">
-        <a href="https://wa.me/447549494810" target="_blank" rel="noopener noreferrer" data-track-contact data-channel="whatsapp" data-position="topbar">WhatsApp: +44 7549 494810</a>
-        <a href="https://t.me/bigfang789" target="_blank" rel="noopener noreferrer" data-track-contact data-channel="telegram" data-position="topbar">Telegram: @bigfang789</a>
-        <a href="mailto:bellallyson394@gmail.com" data-track-contact data-channel="email" data-position="topbar">Email: bellallyson394@gmail.com</a>
+      <div class="topbar-right">
+        <div class="contact-links">
+          <a href="https://wa.me/447549494810" target="_blank" rel="noopener noreferrer" data-track-contact data-channel="whatsapp" data-position="topbar">WhatsApp: +44 7549 494810</a>
+          <a href="https://t.me/bigfang789" target="_blank" rel="noopener noreferrer" data-track-contact data-channel="telegram" data-position="topbar">Telegram: @bigfang789</a>
+          <a href="mailto:bellallyson394@gmail.com" data-track-contact data-channel="email" data-position="topbar">Email: bellallyson394@gmail.com</a>
+        </div>
+        <div class="lang-switch">
+          <a href="/?lang=en"><strong>EN</strong></a>
+          <span>/</span>
+          <a href="/vi.html?lang=vi">VI</a>
+        </div>
       </div>
     </div>
   </header>

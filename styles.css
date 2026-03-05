@@ -101,6 +101,33 @@ img {
   gap: 8px 14px;
 }
 
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  font-size: 0.82rem;
+}
+
+.lang-switch a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.lang-switch span {
+  color: #90adc8;
+}
+
 .contact-links a {
   color: #d8e9fb;
   text-decoration: none;
@@ -539,6 +566,11 @@ p {
 
   .topbar-title {
     width: 100%;
+  }
+
+  .topbar-right {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .contact-links {
